@@ -25,4 +25,3 @@ deploy:
   script: ./deploy.sh
   on:
     branch: master
-
