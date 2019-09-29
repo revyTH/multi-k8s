@@ -86,7 +86,4 @@ services:
       - MYSQL_DATABASE=api
     depends_on:
       - mysql
-
-
-    
   
