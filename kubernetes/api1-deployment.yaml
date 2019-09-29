@@ -27,5 +27,8 @@ spec:
             - name: MYSQL_USER
               value: myuser
             - name: MYSQL_PASSWORD
-              value: mypwd
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
 
