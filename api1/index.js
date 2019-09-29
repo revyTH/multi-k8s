@@ -169,7 +169,7 @@ function monkeyPatchQuery(connection) {
                 VALUES ('${title}', '${year}')
             `);
             res.status(201);
-            return res.json({ msg: "Ok" });
+            return res.json({ msg: "Ok! ^_^" });
         } catch(err) {
             console.error(err);
             res.status(400);
