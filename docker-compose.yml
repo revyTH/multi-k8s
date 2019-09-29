@@ -1,0 +1,92 @@
+version: '3'
+services:
+
+  # mongodb:
+  #   image: spinlud/multik8s_mongo
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./mongo
+  #   restart: always
+  #   hostname: 'mongo-service'
+  #   container_name: 'mongo-service'
+  #   volumes:
+  #     - /Users/ludovicofabbri/Documents/Docker/multi-k8s/mongo-data:/data/db
+  
+  mysql:
+    image: mysql:5.7.27    
+    restart: always
+    hostname: mysql-host
+    container_name: mysql-host
+    volumes:
+      - /Users/ludovicofabbri/Documents/Docker/multi-k8s/db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=api
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypwd
+    # ports:
+    #   - 3306
+
+  nginx:    
+    image: spinlud/multik8s_nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    hostname: 'nginx'
+    container_name: 'nginx'
+    restart: always
+    ports:
+      - '4500:80'  
+    depends_on:
+      - api1
+      - api2
+
+  api1:
+    image: spinlud/multik8s_api1
+    build:
+      dockerfile: Dockerfile
+      context: ./api1
+    hostname: 'api1'
+    container_name: 'api1'
+    restart: always
+    volumes:
+      - /app/node_modules
+      - ./api1:/app
+    # ports:
+    #   - '8081:8081'
+    environment:      
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_HOST=mysql-host
+      - MYSQL_PORT=3306
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypwd
+      - MYSQL_DATABASE=api
+    depends_on:
+      - mysql
+
+  api2:
+    image: spinlud/multik8s_api2
+    build:
+      dockerfile: Dockerfile
+      context: ./api2
+    hostname: 'api2'
+    container_name: 'api2'
+    restart: always
+    volumes:
+      - /app/node_modules
+      - ./api2:/app
+    # ports:
+    #   - '8082:8082'
+    environment: 
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_HOST=mysql-host
+      - MYSQL_PORT=3306
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypwd
+      - MYSQL_DATABASE=api
+    depends_on:
+      - mysql
+
+
+    
+  

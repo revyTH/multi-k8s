@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: web1
+  template:
+    metadata:
+      labels:
+        component: web1
+    spec:
+      containers:
+        - name: api1
+          image: spinlud/multik8s_api1
+          ports:
+            - containerPort: 8081
+          env:
+            - name: MYSQL_HOST
+              value: mysql-cluster-ip-service
+            - name: MYSQL_PORT
+              value: '3306'
+            - name: MYSQL_DATABASE
+              value: api
+            - name: MYSQL_USER
+              value: myuser
+            - name: MYSQL_PASSWORD
+              value: mypwd
+
